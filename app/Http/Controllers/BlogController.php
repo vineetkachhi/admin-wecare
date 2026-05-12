@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Blog;
+use App\Models\Blog_Category;
 
 class BlogController extends Controller
 {
@@ -21,7 +22,8 @@ class BlogController extends Controller
      */
     public function create()
     {
-        return view('blogs.create');
+        $blogCategories = Blog_Category::where('status', 'active')->get();
+        return view('blogs.create', compact('blogCategories'));
     }
 
     /**
@@ -34,16 +36,21 @@ class BlogController extends Controller
             'slug' => 'required|string|unique:blogs,slug|max:255',
             'short_description' => 'required|string',
             'long_description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'status' => 'required|in:active,inactive',
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string|max:500',
             'seo_meta_tag' => 'nullable|string',
+            'blog_category_id' => 'required|exists:blog_categories,id',
         ]);
 
         $imagePath = null;
+
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('blogs', 'public');
+            $image = $request->file('image');
+            $fileName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('blog'), $fileName);
+            $imagePath = 'blog/' . $fileName;
         }
 
         Blog::create([
@@ -56,9 +63,10 @@ class BlogController extends Controller
             'seo_title' => $request->seo_title,
             'seo_description' => $request->seo_description,
             'seo_meta_tag' => $request->seo_meta_tag,
+            'blog_category_id' => $request->blog_category_id,
         ]);
 
-        return redirect()->route('blogs.index')->with('success', 'Blog created successfully');
+        return to_route('blogs.index')->with('success', 'Blog created successfully');
     }
 
     /**
@@ -74,7 +82,8 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        return view('blogs.edit', compact('blog'));
+        $blogCategories = Blog_Category::where('status', 'active')->get();
+        return view('blogs.edit', compact('blog', 'blogCategories'));
     }
 
     /**
@@ -87,19 +96,24 @@ class BlogController extends Controller
             'slug' => 'required|string|unique:blogs,slug,' . $blog->id . '|max:255',
             'short_description' => 'required|string',
             'long_description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'status' => 'required|in:active,inactive',
             'seo_title' => 'nullable|string|max:255',
-            'seo_description' => 'nullable|string|max:500',
+            'seo_description' => 'nullable|string',
             'seo_meta_tag' => 'nullable|string',
+            'blog_category_id' => 'required|exists:blog_categories,id',
         ]);
 
         $imagePath = $blog->image;
+
         if ($request->hasFile('image')) {
-            if ($blog->image) {
-                \Storage::disk('public')->delete($blog->image);
+            if ($blog->image && file_exists(public_path($blog->image))) {
+                unlink(public_path($blog->image));
             }
-            $imagePath = $request->file('image')->store('blogs', 'public');
+            $image = $request->file('image');
+            $fileName = uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('blog'), $fileName);
+            $imagePath = 'blog/' . $fileName;
         }
 
         $blog->update([
@@ -112,9 +126,10 @@ class BlogController extends Controller
             'seo_title' => $request->seo_title,
             'seo_description' => $request->seo_description,
             'seo_meta_tag' => $request->seo_meta_tag,
+            'blog_category_id' => $request->blog_category_id,
         ]);
 
-        return redirect()->route('blogs.index')->with('success', 'Blog updated successfully');
+        return to_route('blogs.index')->with('success', 'Blog updated successfully');
     }
 
     /**
@@ -123,9 +138,16 @@ class BlogController extends Controller
     public function destroy(Blog $blog)
     {
         if ($blog->image) {
-            \Storage::disk('public')->delete($blog->image);
+            unlink(public_path($blog->image));
         }
         $blog->delete();
-        return redirect()->route('blogs.index')->with('success', 'Blog deleted successfully');
+        return to_route('blogs.index')->with('success', 'Blog deleted successfully');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        Blog::whereIn('id', $request->ids)->delete();
+
+        return redirect()->back()->with('success', 'Selected blogs deleted');
     }
 }

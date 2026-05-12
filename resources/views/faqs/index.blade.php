@@ -19,53 +19,97 @@
                                 class="text-green-700 font-bold">&times;</button>
                         </div>
                     @endif
-
                     <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <table class="w-full">
-                            <thead class="bg-gray-800 text-white">
-                                <tr>
-                                    <th class="px-6 py-3 text-left">ID</th>
-                                    <th class="px-6 py-3 text-left">Name</th>
-                                    <th class="px-6 py-3 text-left">Description</th>
-                                    <th class="px-6 py-3 text-left">Status</th>
-                                    <th class="px-6 py-3 text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y">
-                                @forelse($faqs as $faq)
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4">{{ $faq->id }}</td>
-                                        <td class="px-6 py-4">{{ $faq->name }}</td>
-                                        <td class="px-6 py-4">
-                                            {{ \Illuminate\Support\Str::limit($faq->description, 100) }}</td>
-                                        <td class="px-6 py-4">
-                                            <span
-                                                class="inline-block px-3 py-1 rounded-full text-sm font-semibold {{ $faq->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                {{ ucfirst($faq->status) }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 flex gap-2">
-                                            <a href="{{ route('faqs.edit', $faq->id) }}"
-                                                class="bg-green-600 hover:bg-yellow-600 text-black font-semibold py-1 px-3 rounded text-sm">Edit</a>
-                                            <form action="{{ route('faqs.destroy', $faq->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded text-sm"
-                                                    onclick="return confirm('Are you sure?')">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
+
+                        {{-- Bulk Delete Form --}}
+                        <form action="{{ route('faqs.bulkDelete') }}" method="POST"
+                            onsubmit="return confirm('Are you sure you want to delete selected FAQs?')">
+                            @csrf
+                            @method('DELETE')
+
+                            <div class="p-4">
+                                <button type="submit"
+                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded">
+                                    Delete Selected
+                                </button>
+                            </div>
+
+                            <table class="w-full">
+                                <thead class="bg-gray-800 text-white">
                                     <tr>
-                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">No FAQs found
-                                        </td>
+                                        <th class="px-6 py-3 text-left">
+                                            <input type="checkbox" id="selectAll">
+                                        </th>
+                                        <th class="px-6 py-3 text-left">ID</th>
+                                        <th class="px-6 py-3 text-left">Name</th>
+                                        <th class="px-6 py-3 text-left">Description</th>
+                                        <th class="px-6 py-3 text-left">Status</th>
+                                        <th class="px-6 py-3 text-left">Actions</th>
                                     </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+
+                                <tbody class="divide-y">
+                                    @forelse($faqs as $faq)
+                                        <tr class="hover:bg-gray-50">
+
+                                            <td class="px-6 py-4">
+                                                <input type="checkbox" name="ids[]" value="{{ $faq->id }}"
+                                                    class="checkbox">
+                                            </td>
+
+                                            <td class="px-6 py-4">{{ $faq->id }}</td>
+
+                                            <td class="px-6 py-4">{{ $faq->name }}</td>
+
+                                            <td class="px-6 py-4">
+                                                {{ \Illuminate\Support\Str::limit($faq->description, 100) }}
+                                            </td>
+
+                                            <td class="px-6 py-4">
+                                                <span
+                                                    class="inline-block px-3 py-1 rounded-full text-sm font-semibold {{ $faq->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                    {{ ucfirst($faq->status) }}
+                                                </span>
+                                            </td>
+
+                                            <td class="px-6 py-4 flex gap-2">
+                                                <a href="{{ route('faqs.edit', $faq->id) }}"
+                                                    class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-1 px-3 rounded text-sm">
+                                                    Edit
+                                                </a>
+
+                                                <form action="{{ route('faqs.destroy', $faq->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button type="submit"
+                                                        class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded text-sm"
+                                                        onclick="return confirm('Are you sure?')">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                                No FAQs found
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
+
+                    <script>
+                        document.getElementById('selectAll').addEventListener('click', function() {
+                            let checkboxes = document.querySelectorAll('.checkbox');
+                            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+                        });
+                    </script>
+
                 </div>
             </x-slot>
 

@@ -52,7 +52,7 @@ class ProductController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully');
+        return to_route('products.index')->with('success', 'Product created successfully');
     }
 
     public function edit(Product $product)
@@ -95,7 +95,7 @@ class ProductController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        return to_route('products.index')->with('success', 'Product updated successfully');
     }
 
     public function destroy(Product $product)
@@ -104,6 +104,13 @@ class ProductController extends Controller
             unlink(public_path($product->image));
         }
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully');
+        return to_route('products.index')->with('success', 'Product deleted successfully');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        Product::whereIn('id', $request->ids)->delete();
+
+        return redirect()->back()->with('success', 'Selected Product deleted');
     }
 }

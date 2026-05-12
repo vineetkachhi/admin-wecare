@@ -37,7 +37,7 @@
                                         class="block text-gray-700 font-semibold mb-2">Description</label>
                                     <textarea
                                         class="w-full px-4 py-2 border @error('description') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        id="description" name="description" rows="5" required>{{ old('description') }}</textarea>
+                                        id="summernote" name="description" rows="5" required>{{ old('description') }}</textarea>
                                     @error('description')
                                         <span class="text-red-500 text-sm">{{ $message }}</span>
                                     @enderror

@@ -17,7 +17,17 @@ class Setting extends Model
         'linkedin',
         'instagram',
         'footer_heading',
-        'footer_description'
+        'footer_description',
+        'first_heading',
+        'second_heading',
+        'section_one_content',
+        'section_one_image',
+        'experience_heading',
+        'experience_description',
+        'experience_image',
+        'testimonial_heading',
+        'popular_heading',
+
     ];
 
 

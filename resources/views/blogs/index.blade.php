@@ -20,51 +20,78 @@
                         </div>
                     @endif
 
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <table class="w-full">
-                            <thead class="bg-gray-800 text-white">
-                                <tr>
-                                    <th class="px-6 py-3 text-left">ID</th>
-                                    <th class="px-6 py-3 text-left">Title</th>
-                                    <th class="px-6 py-3 text-left">Slug</th>
-                                    <th class="px-6 py-3 text-left">Status</th>
-                                    <th class="px-6 py-3 text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y">
-                                @forelse($blogs as $blog)
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4">{{ $blog->id }}</td>
-                                        <td class="px-6 py-4">{{ $blog->title }}</td>
-                                        <td class="px-6 py-4">{{ $blog->slug }}</td>
-                                        <td class="px-6 py-4">
-                                            <span
-                                                class="inline-block px-3 py-1 rounded-full text-sm font-semibold {{ $blog->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                {{ ucfirst($blog->status) }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 flex gap-2">
-                                            <a href="{{ route('blogs.edit', $blog->id) }}"
-                                                class="bg-yellow-600 hover:bg-yellow-600 text-black font-semibold py-1 px-3 rounded text-sm">Edit</a>
-                                            <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded text-sm"
-                                                    onclick="return confirm('Are you sure?')">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
+                    <form action="{{ route('blogs.bulkDelete') }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <div class="mb-4">
+                            <button type="submit" onclick="return confirm('Delete selected blogs?')"
+                                class="bg-red-600 text-white px-4 py-2 rounded">
+                                Delete Selected
+                            </button>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow overflow-hidden">
+                            <table class="w-full">
+                                <thead class="bg-gray-800 text-white">
                                     <tr>
-                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">No blogs found
-                                        </td>
+                                        <th class="px-6 py-3">
+                                            <input type="checkbox" id="selectAll">
+                                        </th>
+                                        <th class="px-6 py-3">ID</th>
+                                        <th class="px-6 py-3">Title</th>
+                                        <th class="px-6 py-3">Slug</th>
+                                        <th class="px-6 py-3">Status</th>
+                                        <th class="px-6 py-3">Actions</th>
                                     </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+
+                                <tbody>
+                                    @foreach ($blogs as $blog)
+                                        <tr>
+                                            <td class="px-6 py-4">
+                                                <input type="checkbox" name="ids[]" value="{{ $blog->id }}"
+                                                    class="rowCheckbox">
+                                            </td>
+
+                                            <td class="px-6 py-4">{{ $blog->id }}</td>
+                                            <td class="px-6 py-4">{{ $blog->title }}</td>
+                                            <td class="px-6 py-4">{{ $blog->slug }}</td>
+                                            <td class="px-6 py-4">{{ $blog->status }}</td>
+
+                                            <td class="px-6 py-4">
+                                                <a href="{{ route('blogs.edit', $blog->id) }}"
+                                                    class="bg-yellow-500 px-3 py-1 rounded">
+                                                    Edit
+                                                </a>
+
+                                                <a href="{{ route('blogs.destroy', $blog->id) }}"
+                                                    onclick="event.preventDefault(); document.getElementById('delete-{{ $blog->id }}').submit();"
+                                                    class="bg-red-600 text-white px-3 py-1 rounded">
+                                                    Delete
+                                                </a>
+
+                                                <form id="delete-{{ $blog->id }}"
+                                                    action="{{ route('blogs.destroy', $blog->id) }}" method="POST"
+                                                    style="display:none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+
+                    <script>
+                        document.getElementById('selectAll').onclick = function() {
+                            document.querySelectorAll('.rowCheckbox').forEach(cb => {
+                                cb.checked = this.checked;
+                            });
+                        }
+                    </script>
                 </div>
             </x-slot>
 

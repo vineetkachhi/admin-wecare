@@ -25,6 +25,25 @@
                                 @method('PUT')
 
                                 <div class="mb-4">
+                                    <label for="category_id"
+                                        class="block text-gray-700 font-semibold mb-2">Category</label>
+                                    <select
+                                        class="w-full px-4 py-2 border @error('blog_category_id') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        id="category_id" name="blog_category_id" required>
+                                        <option value="">Select Category</option>
+                                        @foreach ($blogCategories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ old('blog_category_id', $blog->blog_category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->category_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('blog_category_id')
+                                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-4">
                                     <label for="title" class="block text-gray-700 font-semibold mb-2">Blog
                                         Title</label>
                                     <input type="text"
@@ -71,7 +90,7 @@
                                     <label for="image" class="block text-gray-700 font-semibold mb-2">Image</label>
                                     @if ($blog->image)
                                         <div class="mb-3">
-                                            <img src="{{ Storage::url($blog->image) }}" alt="Blog Image"
+                                            <img src="{{ asset($blog->image) }}" style="width: 50px" alt="Blog Image"
                                                 class="max-w-xs rounded">
                                         </div>
                                     @endif
@@ -114,15 +133,18 @@
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="seo_description" class="block text-gray-700 font-semibold mb-2">SEO
-                                            Description</label>
-                                        <textarea
-                                            class="w-full px-4 py-2 border @error('seo_description') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            id="seo_description" name="seo_description" rows="3" placeholder="Max 500 characters">{{ $blog->seo_description }}</textarea>
+                                        <label for="seo_description" class="block text-gray-700 font-semibold mb-2">
+                                            SEO Description
+                                        </label>
+
+                                        <textarea id="summernote" name="seo_description"
+                                            class="w-full border @error('seo_description') border-red-500 @else border-gray-300 @enderror rounded-md">{{ old('seo_description', $blog->seo_description) }}</textarea>
+
                                         @error('seo_description')
                                             <span class="text-red-500 text-sm">{{ $message }}</span>
                                         @enderror
                                     </div>
+
 
                                     <div class="mb-6">
                                         <label for="seo_meta_tag" class="block text-gray-700 font-semibold mb-2">SEO

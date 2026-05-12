@@ -21,6 +21,24 @@
 
                             <form action="{{ route('blogs.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
+                                <div class="mb-4">
+                                    <label for="category_id"
+                                        class="block text-gray-700 font-semibold mb-2">Category</label>
+                                    <select
+                                        class="w-full px-4 py-2 border @error('category_id') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        id="category_id" name="blog_category_id" required>
+                                        <option value="">Select Category</option>
+                                        @foreach ($blogCategories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ old('blog_category_id') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->category_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('blog_category_id')
+                                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
                                 <div class="mb-4">
                                     <label for="title" class="block text-gray-700 font-semibold mb-2">Blog
@@ -59,7 +77,7 @@
                                         Description</label>
                                     <textarea
                                         class="w-full px-4 py-2 border @error('long_description') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        id="long_description" name="long_description" rows="6" required>{{ old('long_description') }}</textarea>
+                                        id="summernote" name="long_description" rows="6" required>{{ old('long_description') }}</textarea>
                                     @error('long_description')
                                         <span class="text-red-500 text-sm">{{ $message }}</span>
                                     @enderror

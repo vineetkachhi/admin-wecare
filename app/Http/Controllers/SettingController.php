@@ -13,6 +13,9 @@ class SettingController extends Controller
     public function index()
     {
         $setting = Setting::first();
+        // echo '<pre>';
+        // print_r($setting);
+        // die;
         return view('setting.edit', compact('setting'));
     }
 
@@ -73,11 +76,35 @@ class SettingController extends Controller
             $faviconPath = 'settings/' . $fileName;
         }
 
+        $section_one_image = $setting->section_one_image;
+        if ($request->hasFile('section_one_image')) {
+            if ($setting->section_one_image && file_exists(public_path($setting->section_one_image))) {
+                unlink(public_path($setting->section_one_image));
+            }
+            $image = $request->file('section_one_image');
+            $fileName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('settings'), $fileName);
+            $section_one_image = 'settings/' . $fileName;
+        }
+
+        $experience_image = $setting->experience_image;
+        if ($request->hasFile('experience_image')) {
+            if ($setting->experience_image && file_exists(public_path($setting->experience_image))) {
+                unlink(public_path($setting->experience_image));
+            }
+            $image = $request->file('experience_image');
+            $fileName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('settings'), $fileName);
+            $experience_image = 'settings/' . $fileName;
+        }
+
         $setting->update(array_merge($request->all(), [
             'logo' => $imagePath,
             'favicon' => $faviconPath,
+            'section_one_image' => $section_one_image,
+            'experience_image' => $experience_image,
         ]));
-        return redirect()->route('setting.index')->with('success', 'Settings updated successfully.');
+        return to_route('setting.index')->with('success', 'Settings updated successfully.');
     }
 
     /**

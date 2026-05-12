@@ -20,53 +20,96 @@
                         </div>
                     @endif
 
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <table class="w-full">
-                            <thead class="bg-gray-800 text-white">
-                                <tr>
-                                    <th class="px-6 py-3 text-left">ID</th>
-                                    <th class="px-6 py-3 text-left">Product Name</th>
-                                    <th class="px-6 py-3 text-left">Category</th>
-                                    <th class="px-6 py-3 text-left">Slug</th>
-                                    <th class="px-6 py-3 text-left">Status</th>
-                                    <th class="px-6 py-3 text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y">
-                                @forelse($products as $product)
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4">{{ $product->id }}</td>
-                                        <td class="px-6 py-4">{{ $product->product_name }}</td>
-                                        <td class="px-6 py-4">{{ $product->category->category_name }}</td>
-                                        <td class="px-6 py-4">{{ $product->slug }}</td>
-                                        <td class="px-6 py-4">
-                                            <span
-                                                class="inline-block px-3 py-1 rounded-full text-sm font-semibold {{ $product->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                {{ ucfirst($product->status) }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 flex gap-2">
-                                            <a href="{{ route('products.edit', $product->id) }}"
-                                                class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-1 px-3 rounded text-sm">Edit</a>
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded text-sm"
-                                                    onclick="return confirm('Are you sure?')">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
+                    <form action="{{ route('products.bulkDelete') }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <div class="mb-4">
+                            <button type="submit"
+                                onclick="return confirm('Are you sure you want to delete selected products?')"
+                                class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded">
+                                Delete Selected
+                            </button>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow overflow-hidden">
+                            <table class="w-full">
+                                <thead class="bg-gray-800 text-white">
                                     <tr>
-                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No products found
-                                        </td>
+                                        <th class="px-6 py-3 text-left">
+                                            <input type="checkbox" id="selectAll">
+                                        </th>
+                                        <th class="px-6 py-3 text-left">ID</th>
+                                        <th class="px-6 py-3 text-left">Product Name</th>
+                                        <th class="px-6 py-3 text-left">Category</th>
+                                        <th class="px-6 py-3 text-left">Slug</th>
+                                        <th class="px-6 py-3 text-left">Status</th>
+                                        <th class="px-6 py-3 text-left">Actions</th>
                                     </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+
+                                <tbody class="divide-y">
+                                    @forelse($products as $product)
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4">
+                                                <input type="checkbox"
+                                                    name="ids[]"
+                                                    value="{{ $product->id }}"
+                                                    class="rowCheckbox">
+                                            </td>
+
+                                            <td class="px-6 py-4">{{ $product->id }}</td>
+                                            <td class="px-6 py-4">{{ $product->product_name }}</td>
+                                            <td class="px-6 py-4">{{ $product->category->category_name ?? '' }}</td>
+                                            <td class="px-6 py-4">{{ $product->slug }}</td>
+
+                                            <td class="px-6 py-4">
+                                                <span
+                                                    class="inline-block px-3 py-1 rounded-full text-sm font-semibold {{ $product->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                    {{ ucfirst($product->status) }}
+                                                </span>
+                                            </td>
+
+                                            <td class="px-6 py-4 flex gap-2">
+                                                <a href="{{ route('products.edit', $product->id) }}"
+                                                class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-1 px-3 rounded text-sm">
+                                                    Edit
+                                                </a>
+
+                                                <a href="#"
+                                                onclick="event.preventDefault(); if(confirm('Are you sure?')) document.getElementById('delete-form-{{ $product->id }}').submit();"
+                                                class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded text-sm">
+                                                    Delete
+                                                </a>
+
+                                                <form id="delete-form-{{ $product->id }}"
+                                                    action="{{ route('products.destroy', $product->id) }}"
+                                                    method="POST"
+                                                    style="display:none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                                No products found
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+
+                    <script>
+                    document.getElementById('selectAll').addEventListener('click', function () {
+                        let checkboxes = document.querySelectorAll('.rowCheckbox');
+                        checkboxes.forEach(cb => cb.checked = this.checked);
+                    });
+                    </script>
+
                 </div>
             </x-slot>
 

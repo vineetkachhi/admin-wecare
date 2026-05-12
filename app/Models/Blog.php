@@ -16,5 +16,11 @@ class Blog extends Model
         'seo_title',
         'seo_description',
         'seo_meta_tag',
+        'blog_category_id',
     ];
+
+    public function blog_category()
+    {
+        return $this->belongsTo(Blog_Category::class, 'blog_category_id');
+    }
 }

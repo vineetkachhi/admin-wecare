@@ -81,7 +81,7 @@
                                         Description</label>
                                     <textarea
                                         class="w-full px-4 py-2 border @error('footer_description') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        id="footer_description" name="footer_description" rows="5" required>{{ $setting->footer_description }}</textarea>
+                                        id="summernote" name="footer_description" rows="5" required>{{ $setting->footer_description }}</textarea>
                                     @error('footer_description')
                                         <span class="text-red-500 text-sm">{{ $message }}</span>
                                     @enderror
@@ -150,13 +150,168 @@
                                     @enderror
                                 </div>
 
+                                <div class="border-t pt-6 mt-6">
+                                    <h2 class="text-2xl font-bold text-gray-900 mb-4">First Section</h2>
+                                    <div class="mb-4">
+                                        <label for="first_heading" class="block text-gray-700 font-semibold mb-2">
+                                            First Heading</label>
 
-                                <div class="flex gap-3">
-                                    <button type="submit" style="background-color: #9797df"
-                                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md">Update
-                                        Setting</button>
-                                    <a href="{{ route('setting.index') }}" style="background-color: #e90e0e"
-                                        class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-md">Cancel</a>
+                                        <input type="text"
+                                            class="w-full px-4 py-2 border @error('first_heading') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            id="first_heading" name="first_heading"
+                                            value="{{ $setting->first_heading }}" required>
+                                        @error('first_heading')
+                                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="secound_heading" class="block text-gray-700 font-semibold mb-2">
+                                            Second Heading</label>
+
+                                        <input type="text"
+                                            class="w-full px-4 py-2 border @error('second_heading') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            id="second_heading" name="second_heading"
+                                            value="{{ $setting->second_heading }}" required>
+                                        @error('second_heading')
+                                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="section_one_description"
+                                            class="block text-gray-700 font-semibold mb-2">
+                                            Description</label>
+
+                                        <textarea
+                                            class="w-full px-4 py-2 border @error('section_one_content') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            id="sectionOneDescription" name="section_one_content" rows="5" required>{{ $setting->section_one_content }}</textarea>
+                                        @error('section_one_content')
+                                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="section_one_image"
+                                            class="block text-gray-700 font-semibold mb-2">Image or video</label>
+                                        @if ($setting->section_one_image)
+                                            @php
+                                                $file = $setting->section_one_image;
+                                                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                                            @endphp
+
+                                            <div class="mb-3">
+                                                @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                                    <img src="{{ asset($file) }}" width="150"
+                                                        alt="Section One Image" class="max-w-xs rounded">
+                                                @elseif (in_array(strtolower($extension), ['mp4', 'mov', 'avi', 'webm']))
+                                                    <video width="200" controls class="rounded">
+                                                        <source src="{{ asset($file) }}"
+                                                            type="video/{{ $extension }}">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                @endif
+                                            </div>
+                                        @endif
+
+                                        <input type="file"
+                                            class="w-full px-4 py-2 border @error('section_one_image') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            id="section_one_image" name="section_one_image" accept="image/*,video/*">
+                                        @error('section_one_image')
+                                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="border-t pt-6 mt-6">
+                                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Experience Section</h2>
+                                        <div class="mb-4">
+                                            <label for="experience_heading"
+                                                class="block text-gray-700 font-semibold mb-2">
+                                                Experience Heading</label>
+
+                                            <textarea
+                                                class="w-full px-4 py-2 border @error('experience_heading') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                id="summernoteHeading" name="experience_heading" rows="5" required>{{ $setting->experience_heading }}</textarea>
+
+                                            @error('experience_heading')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="experience_description"
+                                                class="block text-gray-700 font-semibold mb-2">
+                                                Experience Description</label>
+                                            <textarea
+                                                class="w-full px-4 py-2 border @error('experience_description') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                id="summernoteDescription" name="experience_description" rows="5" required>{{ $setting->experience_description }}</textarea>
+                                            @error('experience_description')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="experience_image"
+                                                class="block text-gray-700 font-semibold mb-2">Experience Image</label>
+                                            @if ($setting->experience_image)
+                                                <div class="mb-3">
+                                                    <img src="{{ asset($setting->experience_image) }}" width="150"
+                                                        alt="Experience Image" class="max-w-xs rounded">
+
+                                                </div>
+                                            @endif
+
+                                            <input type="file"
+                                                class="w-full px-4 py-2 border @error('experience_image') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                id="experience_image" name="experience_image"
+                                                accept="image/*,video/*">
+                                            @error('experience_image')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                    </div>
+
+                                    <div class="border-t pt-6 mt-6">
+                                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Testimonial Section</h2>
+                                        <div class="mb-4">
+                                            <label for="testimonial_heading"
+                                                class="block text-gray-700 font-semibold mb-2">
+                                                Testimonial Heading</label>
+
+                                            <textarea
+                                                class="w-full px-4 py-2 border @error('testimonial_heading') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                id="testimonialHeading" name="testimonial_heading" rows="5" required>{{ $setting->testimonial_heading }}</textarea>
+
+                                            @error('testimonial_heading')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="border-t pt-6 mt-6">
+                                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Popular Section</h2>
+                                        <div class="mb-4">
+                                            <label for="popular_heading"
+                                                class="block text-gray-700 font-semibold mb-2">
+                                                Popular Heading</label>
+
+                                            <textarea
+                                                class="w-full px-4 py-2 border @error('popular_heading') border-red-500 @else border-gray-300 @enderror rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                name="popular_heading" rows="5" required>{{ $setting->popular_heading }}</textarea>
+
+                                            @error('popular_heading')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="flex gap-3">
+                                        <button type="submit" style="background-color: #9797df"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md">Update
+                                            Setting</button>
+                                        <a href="{{ route('setting.index') }}" style="background-color: #e90e0e"
+                                            class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-md">Cancel</a>
                             </form>
                         </div>
                     </div>

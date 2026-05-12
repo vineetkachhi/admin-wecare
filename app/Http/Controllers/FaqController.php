@@ -32,7 +32,7 @@ class FaqController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('faqs.index')->with('success', 'FAQ created successfully');
+        return to_route('faqs.index')->with('success', 'FAQ created successfully');
     }
 
     public function edit(Faq $faq)
@@ -54,12 +54,19 @@ class FaqController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('faqs.index')->with('success', 'FAQ updated successfully');
+        return to_route('faqs.index')->with('success', 'FAQ updated successfully');
     }
 
     public function destroy(Faq $faq)
     {
         $faq->delete();
-        return redirect()->route('faqs.index')->with('success', 'FAQ deleted successfully');
+        return to_route('faqs.index')->with('success', 'FAQ deleted successfully');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        Faq::whereIn('id', $ids)->delete();
+        return redirect()->back()->with('success', 'Selected FAQs deleted successfully.');
     }
 }

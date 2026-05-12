@@ -4,7 +4,7 @@
         margin: 10px
     }
 </style>
-<aside class="w-64 bg-gray-900 text-white p-6">
+<aside class="w-64  text-white p-6">
     <div class="mb-8">
         <h2 class="text-2xl font-bold">Admin Panel</h2>
     </div>
@@ -29,12 +29,34 @@
             class="block px-4 py-2 rounded-md hover:bg-gray-700 transition {{ request()->routeIs('faqs.*') ? 'bg-blue-600' : '' }}">
             <i class="fas fa-question-circle mr-2"></i>FAQs
         </a>
+        <a href="{{ route('blog-categories.index') }}"
+            class="block px-4 py-2 rounded-md hover:bg-gray-700 transition {{ request()->routeIs('blog-categories.*') ? 'bg-blue-600' : '' }}">
+            <i class="fas fa-tags mr-2"></i>Blog Categories
+        </a>
 
         <a href="{{ route('blogs.index') }}"
             class="block px-4 py-2 rounded-md hover:bg-gray-700 transition {{ request()->routeIs('blogs.*') ? 'bg-blue-600' : '' }}">
             <i class="fas fa-blog mr-2"></i>Blogs
         </a>
 
+        <a href="{{ route('contacts.index') }}"
+            class="block px-4 py-2 rounded-md hover:bg-gray-700 transition {{ request()->routeIs('contacts.*') ? 'bg-blue-600' : '' }}">
+            <i class="fas fa-envelope mr-2"></i>Contacts
+        </a>
+        <a href="{{ route('testimonial.index') }}"
+        class="block px-4 py-2 rounded-md hover:bg-gray-700 transition {{ request()->routeIs('testimonial.*') ? 'bg-blue-600' : '' }}">
+            <i class="fas fa-comments mr-2"></i> Testimonials
+        </a>
+
+        <a href="{{ route('popular_work.index') }}"
+        class="block px-4 py-2 rounded-md hover:bg-gray-700 transition {{ request()->routeIs('popular_work.*') ? 'bg-blue-600' : '' }}">
+            <i class="fas fa-briefcase mr-2"></i> Popular Works
+        </a>
+
+        <a href="{{ route('experience.index') }}"
+        class="block px-4 py-2 rounded-md hover:bg-gray-700 transition {{ request()->routeIs('experience.*') ? 'bg-blue-600' : '' }}">
+            <i class="fas fa-user-tie mr-2"></i> Experience
+        </a>
 
         <a href="{{ route('setting.index') }}"
             class="block px-4 py-2 rounded-md hover:bg-gray-700 transition {{ request()->routeIs('settings.*') ? 'bg-blue-600' : '' }}">

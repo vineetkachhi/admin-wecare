@@ -75,6 +75,74 @@
                                         class="mt-4 inline-block text-purple-600 hover:text-purple-800">View All →</a>
                                 </div>
                             </div>
+                            <!-- Testimonials Card -->
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                <div class="p-6 text-gray-900">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="text-gray-600 text-sm">Total Testimonials</p>
+                                            <p class="text-3xl font-bold text-purple-600">
+                                                {{ \App\Models\Testimonial::count() }}
+                                            </p>
+                                        </div>
+                                        <i class="fas fa-comment-alt text-4xl text-purple-200"></i>
+                                    </div>
+                                    <a href="{{ route('testimonial.index') }}"
+                                        class="mt-4 inline-block text-purple-600 hover:text-purple-800">View All →</a>
+                                </div>
+                            </div>
+
+                            <!-- Popular Works Card -->
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                <div class="p-6 text-gray-900">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="text-gray-600 text-sm">Total Popular Works</p>
+                                            <p class="text-3xl font-bold text-purple-600">
+                                                {{ \App\Models\Popular_Work::count() }}
+                                            </p>
+                                        </div>
+                                        <i class="fas fa-briefcase  text-4xl text-purple-200"></i>
+                                    </div>
+                                    <a href="{{ route('popular_work.index') }}"
+                                        class="mt-4 inline-block text-purple-600 hover:text-purple-800">View All →</a>
+                                </div>
+                            </div>
+
+                            <!-- Experience Card -->
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                <div class="p-6 text-gray-900">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="text-gray-600 text-sm">Total Experience</p>
+                                            <p class="text-3xl font-bold text-purple-600">
+                                                {{ \App\Models\Experience::count() }}
+                                            </p>
+                                        </div>
+                                        <i class="fas fa-user-tie  text-4xl text-purple-200"></i>
+                                    </div>
+                                    <a href="{{ route('experience.index') }}"
+                                        class="mt-4 inline-block text-purple-600 hover:text-purple-800">View All →</a>
+                                </div>
+                            </div>
+                            <!-- Contact Card -->
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                <div class="p-6 text-gray-900">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="text-gray-600 text-sm">Total Contact</p>
+                                            <p class="text-3xl font-bold text-purple-600">
+                                                {{ \App\Models\Contact::count() }}
+                                            </p>
+                                        </div>
+                                        <i class="fas fa-envelope  text-4xl text-purple-200"></i>
+                                    </div>
+                                    <a href="{{ route('contacts.index') }}"
+                                        class="mt-4 inline-block text-purple-600 hover:text-purple-800">View All →</a>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
